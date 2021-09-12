@@ -1,0 +1,131 @@
+#include <assert.h>
+#include <conio.h>
+#include <stdio.h>
+#include <string.h>
+#include "Console.h"
+#include "GoalInGame.h"
+#include "Screen.h"
+
+player_t g_player;
+char g_str_player[] = "( > ¥ø < )";
+ball_t g_ball;
+goal_post_t g_goal_post;
+
+static void init(void);
+static void update(void);
+static void render(void);
+
+void goal_in_game(void)
+{
+    init();
+
+    while (1) {
+        update();
+        render();
+    }
+}
+
+void init(void)
+{
+    g_player.center_x = 4;
+    g_player.center_y = 0;
+    g_player.move_x = 20;
+    g_player.move_y = g_player.y = 20;
+    g_player.x = g_player.move_x - g_player.center_x;
+
+    g_ball.x = g_player.move_x;
+    g_ball.y = g_player.move_y - 1;
+    g_ball.is_ready = 1;
+    g_ball.move_time = 100;
+
+    g_goal_post.x = 20;
+    g_goal_post.y = 3;
+    g_goal_post.dir = 1;
+    g_goal_post.line = 7;
+    g_goal_post.move_time = 70;
+    g_goal_post.old_time = clock();
+}
+
+void update(void)
+{
+    clock_t cur_time = clock();
+    int goal_post_length = g_goal_post.line + 5;
+
+    if (_kbhit()) {
+        int key = _getch();
+
+        switch (key) {
+        case 'j':
+            if (g_player.x > 1) {
+                --g_player.move_x;
+            }
+            g_player.x = g_player.move_x - g_player.center_x;
+            break;
+        case 'l':
+            if (g_player.x + 10 < 39) {
+                ++g_player.move_x;
+            }
+            g_player.x = g_player.move_x - g_player.center_x;
+            break;
+        case 'k':
+            if (g_ball.is_ready == 1) {
+                g_ball.is_ready = 0;
+                g_ball.old_time = clock();
+            }
+            break;
+        default:
+            printf("Hit the valid key!");
+            break;
+        }
+    }
+
+    if (g_ball.is_ready == 0) {
+        if (cur_time - g_ball.old_time > g_ball.move_time) {
+            g_ball.old_time = cur_time;
+            if (g_ball.y <= g_goal_post.y && (g_ball.x > g_goal_post.x && g_ball.x < g_goal_post.x + goal_post_length)) {
+                // TODO µæÁ¡
+                g_ball.is_ready = 1;
+                g_ball.x = g_player.move_x;
+                g_ball.y = g_player.move_y - 1;
+            }
+            else if (g_ball.y <= 2) {
+                g_ball.is_ready = 1;
+                g_ball.x = g_player.move_x;
+                g_ball.y = g_player.move_y - 1;
+            }
+            else {
+                --g_ball.y;
+            }
+        }
+    }
+    else {
+        g_ball.x = g_player.move_x;
+    }
+
+    if (g_goal_post.x <= 2 || g_goal_post.x + goal_post_length >= 39) {
+        g_goal_post.dir *= -1;
+    }
+
+    if (cur_time - g_goal_post.old_time > g_goal_post.move_time) {
+        g_goal_post.x += g_goal_post.dir;
+        g_goal_post.old_time = cur_time;
+    }
+}
+
+void render(void)
+{
+    print_goal_in_game_screen();
+
+    GotoXY(g_player.x, g_player.y);
+    printf(g_str_player);
+
+    GotoXY(g_ball.x, g_ball.y);
+    printf("¢Á");
+
+    GotoXY(g_goal_post.x, g_goal_post.y);
+    printf("¡à");
+    for (int i = 0; i < g_goal_post.line; ++i) {
+        printf("¦¡");
+    }
+    printf(" ¡à");
+}

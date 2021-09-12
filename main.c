@@ -1,6 +1,7 @@
 #include <conio.h>
 #include <stdio.h>
 #include "Console.h"
+#include "GoalInGame.h"
 #include "Screen.h"
 
 int main()
@@ -15,7 +16,7 @@ int main()
 
             switch (key) {
             case '1':
-                // TODO
+                goal_in_game();
                 break;
             default:
                 printf("Hit the number!");
