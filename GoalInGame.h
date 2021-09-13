@@ -24,7 +24,7 @@ typedef struct {
 	int x;
 	int y;
 	int dir;
-	int line;
+	int line_length;
 	clock_t move_time;
 	clock_t old_time;
 } goal_post_t;

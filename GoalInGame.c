@@ -41,7 +41,7 @@ void init(void)
     g_goal_post.x = 20;
     g_goal_post.y = 3;
     g_goal_post.dir = 1;
-    g_goal_post.line = 7;
+    g_goal_post.line_length = 7;
     g_goal_post.move_time = 70;
     g_goal_post.old_time = clock();
 }
@@ -49,7 +49,6 @@ void init(void)
 void update(void)
 {
     clock_t cur_time = clock();
-    int goal_post_length = g_goal_post.line + 5;
 
     if (_kbhit()) {
         int key = _getch();
@@ -82,7 +81,7 @@ void update(void)
     if (g_ball.is_ready == 0) {
         if (cur_time - g_ball.old_time > g_ball.move_time) {
             g_ball.old_time = cur_time;
-            if (g_ball.y <= g_goal_post.y && (g_ball.x > g_goal_post.x && g_ball.x < g_goal_post.x + goal_post_length)) {
+            if (g_ball.y <= g_goal_post.y && (g_ball.x > g_goal_post.x && g_ball.x < g_goal_post.x + g_goal_post.line_length * 2)) {
                 // TODO µæÁ¡
                 g_ball.is_ready = 1;
                 g_ball.x = g_player.move_x;
@@ -102,12 +101,18 @@ void update(void)
         g_ball.x = g_player.move_x;
     }
 
-    if (g_goal_post.x <= 2 || g_goal_post.x + goal_post_length >= 39) {
+    if (g_goal_post.x <= 1 || g_goal_post.x + g_goal_post.line_length * 2 >= 39) {
         g_goal_post.dir *= -1;
     }
 
     if (cur_time - g_goal_post.old_time > g_goal_post.move_time) {
         g_goal_post.x += g_goal_post.dir;
+        if (g_goal_post.x < 1) {
+            g_goal_post.x = 1;
+        }
+        else if (g_goal_post.x + g_goal_post.line_length * 2 > 39) {
+            g_goal_post.x = 39 - g_goal_post.line_length * 2;
+        }
         g_goal_post.old_time = cur_time;
     }
 }
@@ -121,11 +126,9 @@ void render(void)
 
     ScreenPrint(g_ball.x, g_ball.y, "¢Á");
 
-    ScreenPrint(g_goal_post.x, g_goal_post.y, "¡à");
-    for (int i = 0; i < g_goal_post.line; ++i) {
-        ScreenPrint(g_goal_post.x + i, g_goal_post.y, "¦¡");
+    for (int i = 0; i < g_goal_post.line_length; ++i) {
+        ScreenPrint(g_goal_post.x + i * 2, g_goal_post.y, "¢Ì");
     }
-    ScreenPrint(g_goal_post.x + i, g_goal_post.y, " ¡à");
 
     ScreenFlipping();
 }
