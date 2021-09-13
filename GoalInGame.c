@@ -114,18 +114,18 @@ void update(void)
 
 void render(void)
 {
+    ScreenClear();
     print_goal_in_game_screen();
 
-    GotoXY(g_player.x, g_player.y);
-    printf(g_str_player);
+    ScreenPrint(g_player.x, g_player.y, g_str_player);
 
-    GotoXY(g_ball.x, g_ball.y);
-    printf("¢Á");
+    ScreenPrint(g_ball.x, g_ball.y, "¢Á");
 
-    GotoXY(g_goal_post.x, g_goal_post.y);
-    printf("¡à");
+    ScreenPrint(g_goal_post.x, g_goal_post.y, "¡à");
     for (int i = 0; i < g_goal_post.line; ++i) {
-        printf("¦¡");
+        ScreenPrint(g_goal_post.x + i, g_goal_post.y, "¦¡");
     }
-    printf(" ¡à");
+    ScreenPrint(g_goal_post.x + i, g_goal_post.y, " ¡à");
+
+    ScreenFlipping();
 }

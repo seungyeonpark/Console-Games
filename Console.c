@@ -1,25 +1,47 @@
-#include <windows.h>
-#include "Console.h"
+#include <Windows.h>
 
-void InitScreen(void)
+
+static int g_nScreenIndex;
+static HANDLE g_hScreen[2];
+
+void ScreenInit(void)
 {
-    CONSOLE_CURSOR_INFO curInfor;
+	CONSOLE_CURSOR_INFO cci;
 
-    system("mode con cols=80 lines=25");
+	system("mode con cols=80 lines=25");
 
-    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfor);
-    curInfor.bVisible = FALSE;
-    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfor);
+	g_hScreen[0] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+	g_hScreen[1] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+
+	cci.dwSize = 1;
+	cci.bVisible = FALSE;
+	SetConsoleCursorInfo(g_hScreen[0], &cci);
+	SetConsoleCursorInfo(g_hScreen[1], &cci);
 }
 
-void GotoXY(int _x, int _y)
+void ScreenFlipping(void)
 {
-    COORD pos = { _x, _y };
-
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+	SetConsoleActiveScreenBuffer(g_hScreen[g_nScreenIndex]);
+	g_nScreenIndex = !g_nScreenIndex;
 }
 
-void Clear(void)
+void ScreenClear(void)
 {
-    system("cls");
+	COORD Coor = { 0, 0 };
+	DWORD dw;
+	FillConsoleOutputCharacter(g_hScreen[g_nScreenIndex], ' ', 80 * 25, Coor, &dw);
+}
+
+void ScreenRelease()
+{
+	CloseHandle(g_hScreen[0]);
+	CloseHandle(g_hScreen[1]);
+}
+
+void ScreenPrint(int x, int y, char* string)
+{
+	DWORD dw;
+	COORD CursorPosition = { x, y };
+	SetConsoleCursorPosition(g_hScreen[g_nScreenIndex], CursorPosition);
+	WriteFile(g_hScreen[g_nScreenIndex], string, strlen(string), &dw, NULL);
 }

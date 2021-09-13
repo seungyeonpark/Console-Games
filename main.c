@@ -6,11 +6,11 @@
 
 int main()
 {
-    InitScreen();
-
-    print_main_screen();
+    ScreenInit();
 
     while (1) {
+        print_main_screen();
+
         if (_kbhit()) {
             int key = _getch();
 
@@ -19,11 +19,14 @@ int main()
                 goal_in_game();
                 break;
             default:
-                printf("Hit the number!");
+                ScreenPrint(0, 25, "Hit the number!");
                 break;
             }
         }
+
+        ScreenFlipping();
     }
 
+    ScreenRelease();
     return 0;
 }
