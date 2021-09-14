@@ -49,3 +49,42 @@ void print_goal_in_game_screen(void)
     ScreenPrint(0, 21, "┃                                      ┃");
     ScreenPrint(0, 22, "┕━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙");
 }
+
+void print_goal_in(void)
+{
+    ScreenPrint(45, 12, " ★GOAL IN★");
+    ScreenPrint(45, 13, " 　 ∧..∧");
+    ScreenPrint(45, 14, "∩(＾ 0 ＾)∩");
+    ScreenPrint(45, 15, "   \\　　ノ");
+    ScreenPrint(45, 16, "　  |　 |");
+    ScreenPrint(45, 17, "　   U U");
+}
+
+void print_failed(void)
+{
+    ScreenPrint(5, 5, "______   ___   _____  _      _____ ______ ");
+    ScreenPrint(5, 6, "|  ___| / _ \\ |_   _|| |    |  ___||  _  \\");
+    ScreenPrint(5, 7, "| |_   / /_\\ \\  | |  | |    | |__  | | | |");
+    ScreenPrint(5, 8, "|  _|  |  _  |  | |  | |    |  __| | | | |");
+    ScreenPrint(5, 9, "| |    | | | | _| |_ | |____| |___ | |/ / ");
+    ScreenPrint(5, 10, "\\_|    \\_| |_/ \\___/ \\_____/\\____/ |___/  ");
+
+    ScreenPrint(10, 15, "=========== 재도전: Y ===========");
+    ScreenPrint(10, 16, "========= 게임 종료: N ==========");
+}
+
+void print_result(void)
+{
+    ScreenPrint(5, 2, " _____  _      _____   ___  ______");
+    ScreenPrint(5, 3, "/  __ \\| |    |  ___| / _ \\ | ___ \\");
+    ScreenPrint(5, 4, "| /  \\/| |    | |__  / /_\\ \\| |_/ /");
+    ScreenPrint(5, 5, "| |    | |    |  __| |  _  ||    /");
+    ScreenPrint(5, 6, "| \\__/\\| |____| |___ | | | || |\\ \\");
+    ScreenPrint(5, 7, " \\____/\\_____/\\____/ \\_| |_/\\_| \\_|");
+    ScreenPrint(5, 10, " 　　／⌒\\       　／⌒\\");
+    ScreenPrint(5, 11, "　 ∩＾ω＾）　　（＾ω＾∩　");
+    ScreenPrint(5, 12, "　 |　　 ⊂      　t⊃　  ｜");
+    ScreenPrint(5, 13, "　 ｜　  _⊃    　⊂_ 　 ｜");
+    ScreenPrint(5, 14, "　 し ⌒            　⌒ J");
+    ScreenPrint(5, 16, "  아무 키나 누르면 종료됩니다");
+}
