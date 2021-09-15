@@ -39,6 +39,7 @@ void goal_in_game(void)
     g_stage_level = 0;
 
     ScreenClear();
+
     // 게임 시작 및 소개 화면 출력
 
     while (1) {
@@ -94,14 +95,12 @@ void goal_in_game(void)
             }
             else if (return_value == 0) {
                 goto over;
-                //break;
             }
             break;
         case RESULT:
             return_value = result();
             if (return_value == 0) {
                 goto over;
-                //break;
             }
             break;
         default:
@@ -146,8 +145,10 @@ void ready(void)
     char buffer[32];
 
     print_goal_in_game_screen();
-    sprintf_s(buffer, 32, "=== STAGE: %d ===", g_stage_level + 1);
-    ScreenPrint(10, 13, buffer);
+    sprintf_s(buffer, 32, "     STAGE: %d     ", g_stage_level + 1);
+    ScreenPrint(12, 10, "==================");
+    ScreenPrint(12, 11, buffer);
+    ScreenPrint(12, 12, "==================");
 }
 
 void running(void)
@@ -261,16 +262,15 @@ void running(void)
 
 void success(void)
 {
-    char buffer[32];
-
     if (g_stage_level == LAST_STAGE) {
         game_state = RESULT;
     }
 
     print_goal_in_game_screen();
 
-    sprintf_s(buffer, 32, "CLEAR STAGE: %d", g_stage_level + 1);
-    ScreenPrint(10, 13, buffer);
+    ScreenPrint(12, 10, "==================");
+    ScreenPrint(12, 11, "    STAGE CLEAR  ");
+    ScreenPrint(12, 12, "==================");
 }
 
 int failed(void)
@@ -285,10 +285,8 @@ int failed(void)
             // intentional fall through
         case 'Y':
             return 1;
-            //break;
         default:
             return 0;
-            //break;
         }
     }
     return -1;
