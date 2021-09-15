@@ -18,8 +18,10 @@ stage_info_t g_stage_info[3] = {
 
 static int g_goal_count;
 static int g_stage_level;
+static int g_is_goal = 0;
 
 clock_t g_old_time;
+clock_t g_goal_ceremony_time;
 
 player_t g_player;
 char g_str_player[] = "( > ¥ø < )";
@@ -159,7 +161,6 @@ void running(void)
         return;
     }
 
-    int is_goal = 0;
     clock_t cur_time = clock();
 
     if (_kbhit()) {
@@ -194,7 +195,8 @@ void running(void)
         if (cur_time - g_ball.old_time > g_ball.move_time) {
             if (g_ball.y <= g_goal_post.y && (g_ball.x > g_goal_post.x && g_ball.x < g_goal_post.x + g_goal_post.line_length * 2)) {
                 g_goal_count += 1;
-                is_goal = 1;
+                g_goal_ceremony_time = cur_time;
+                g_is_goal = 1;
                 g_ball.is_ready = 1;
                 g_ball.x = g_player.move_x;
                 g_ball.y = g_player.move_y - 1;
@@ -254,9 +256,13 @@ void running(void)
         ScreenPrint(50 + (g_goal_count + j) * 2, 8, "¡Û");
     }
 
-    if (is_goal) {
-        print_goal_in();
-        is_goal = 0;
+    if (g_is_goal) {
+        if (cur_time - g_goal_ceremony_time < 2000) {
+            print_goal_in();
+        }
+        else {
+            g_is_goal = 0;
+        }
     }
 }
 
