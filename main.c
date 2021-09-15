@@ -9,8 +9,9 @@ int main()
     ScreenInit();
 
     while (1) {
-        print_main_screen();
+        ScreenClear(); 
 
+        print_main_screen();
         if (_kbhit()) {
             int key = _getch();
 

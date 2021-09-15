@@ -40,15 +40,22 @@ void goal_in_game(void)
     game_state = INIT;
     g_stage_level = 0;
 
-    ScreenClear();
+    clock_t cur_time = clock();
+    g_old_time = cur_time;
 
-    // 게임 시작 및 소개 화면 출력
+    while (cur_time - g_old_time < 5000) {
+        ScreenClear();
+        print_goal_in_game_intro();
+        cur_time = clock();
+        ScreenFlipping();
+    }
 
     while (1) {
         int return_value;
-        clock_t cur_time = clock();
+        cur_time = clock();
 
         ScreenClear();
+
         switch (game_state)
         {
         case INIT:
@@ -109,10 +116,10 @@ void goal_in_game(void)
             assert(0);
             break;
         }
+
         ScreenFlipping();
     }
 over:
-    ScreenFlipping();
     return;
 }
 
@@ -161,7 +168,7 @@ void running(void)
         return;
     }
 
-    clock_t cur_time = clock();
+    clock_t running_cur_time = clock();
 
     if (_kbhit()) {
         int key = _getch();
@@ -192,10 +199,10 @@ void running(void)
     }
 
     if (g_ball.is_ready == 0) {
-        if (cur_time - g_ball.old_time > g_ball.move_time) {
+        if (running_cur_time - g_ball.old_time > g_ball.move_time) {
             if (g_ball.y <= g_goal_post.y && (g_ball.x > g_goal_post.x && g_ball.x < g_goal_post.x + g_goal_post.line_length * 2)) {
                 g_goal_count += 1;
-                g_goal_ceremony_time = cur_time;
+                g_goal_ceremony_time = running_cur_time;
                 g_is_goal = 1;
                 g_ball.is_ready = 1;
                 g_ball.x = g_player.move_x;
@@ -209,7 +216,7 @@ void running(void)
             else {
                 --g_ball.y;
             }
-            g_ball.old_time = cur_time;
+            g_ball.old_time = running_cur_time;
         }
     }
     else {
@@ -220,7 +227,7 @@ void running(void)
         g_goal_post.dir *= -1;
     }
 
-    if (cur_time - g_goal_post.old_time > g_goal_post.move_time) {
+    if (running_cur_time - g_goal_post.old_time > g_goal_post.move_time) {
         g_goal_post.x += g_goal_post.dir;
         if (g_goal_post.x < 1) {
             g_goal_post.x = 1;
@@ -228,7 +235,7 @@ void running(void)
         else if (g_goal_post.x + g_goal_post.line_length * 2 > 39) {
             g_goal_post.x = 39 - g_goal_post.line_length * 2;
         }
-        g_goal_post.old_time = cur_time;
+        g_goal_post.old_time = running_cur_time;
     }
 
     print_goal_in_game_screen();
@@ -244,7 +251,7 @@ void running(void)
     char buffer[32];
     sprintf_s(buffer, 32, "stage: %d", g_stage_level + 1);
     ScreenPrint(45, 6, buffer);
-    sprintf_s(buffer, 32, "time: %d / %d", (cur_time - g_old_time) / 1000, g_stage_info[g_stage_level].time_limit / 1000);
+    sprintf_s(buffer, 32, "time: %d / %d", (running_cur_time - g_old_time) / 1000, g_stage_info[g_stage_level].time_limit / 1000);
     ScreenPrint(45, 7, buffer);
 
     int not_goal = g_stage_info[g_stage_level].goal_count - g_goal_count;
@@ -257,7 +264,7 @@ void running(void)
     }
 
     if (g_is_goal) {
-        if (cur_time - g_goal_ceremony_time < 2000) {
+        if (running_cur_time - g_goal_ceremony_time < 2000) {
             print_goal_in();
         }
         else {

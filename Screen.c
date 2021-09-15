@@ -23,6 +23,28 @@ void print_main_screen(void)
     ScreenPrint(5, 20, "┃                                                               ┃");
     ScreenPrint(5, 21, "┖━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙");
 }
+               
+void print_goal_in_game_intro(void)
+{
+    ScreenPrint(5, 2, "                _____  _   _  _____ ______  _____ ");
+    ScreenPrint(5, 3, "               |_   _|| \\ | ||_   _|| ___ \\|  _  |");
+    ScreenPrint(5, 4, "                 | |  |  \\| |  | |  | |_/ /| | | |");
+    ScreenPrint(5, 5, "                 | |  | . ` |  | |  |    / | | | |");
+    ScreenPrint(5, 6, "                _| |_ | |\\  |  | |  | |\\ \\ \\ \\_/ /");
+    ScreenPrint(5, 7, "                \\___/ \\_| \\_/  \\_/  \\_| \\_| \\___/");
+    ScreenPrint(5, 11, "┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑");
+    ScreenPrint(5, 12, "┃                                                               ┃");
+    ScreenPrint(5, 13, "┃                  ====▶ GOAL-IN GAME ◀====                   ┃");
+    ScreenPrint(5, 14, "┃                                                               ┃");
+    ScreenPrint(5, 15, "┃                   스테이지 1-3까지 있습니다                   ┃");
+    ScreenPrint(5, 16, "┃            플레이어를 움직여 골대에 골을 넣으세요             ┃");
+    ScreenPrint(5, 17, "┃                                                               ┃");
+    ScreenPrint(5, 18, "┃     J : 왼쪽으로 이동 / K: 골 발사! / L: 오른쪽으로 이동      ┃");
+    ScreenPrint(5, 19, "┃                                                               ┃");
+    ScreenPrint(5, 20, "┃                                                               ┃");
+    ScreenPrint(5, 21, "┃                                                               ┃");
+    ScreenPrint(5, 22, "┖━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙");
+}
 
 void print_goal_in_game_screen(void)
 {
