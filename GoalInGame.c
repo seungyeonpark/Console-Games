@@ -297,6 +297,7 @@ int result(void)
     print_result();
 
     if (_kbhit()) {
+        int buffer = _getch();
         return 0;
     }
 
