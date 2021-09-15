@@ -244,14 +244,14 @@ void running(void)
     ScreenPrint(45, 6, buffer);
     sprintf_s(buffer, 32, "time: %d / %d", (cur_time - g_old_time) / 1000, g_stage_info[g_stage_level].time_limit / 1000);
     ScreenPrint(45, 7, buffer);
-    int goal_num;
+
     int not_goal = g_stage_info[g_stage_level].goal_count - g_goal_count;
     ScreenPrint(45, 8, "goal: ");
-    for (goal_num = 0; goal_num < g_goal_count; ++goal_num) {
-        ScreenPrint(51 + goal_num, 8, "¡Ü");
+    for (int i = 0; i < g_goal_count; ++i) {
+        ScreenPrint(50 + i * 2, 8, "¡Ü");
     }
-    for (int i = 0; i < not_goal; ++i) {
-        ScreenPrint(51 + i + goal_num, 8, "¡Û");
+    for (int j = 0; j < not_goal; ++j) {
+        ScreenPrint(50 + (g_goal_count + j) * 2, 8, "¡Û");
     }
 
     if (is_goal) {
