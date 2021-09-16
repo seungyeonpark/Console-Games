@@ -19,6 +19,9 @@ int main()
             case '1':
                 goal_in_game();
                 break;
+            case '2':
+                whack_a_mole_game();
+                break;
             default:
                 ScreenPrint(0, 25, "Hit the number!");
                 break;
