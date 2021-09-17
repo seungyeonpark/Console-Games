@@ -8,9 +8,9 @@
 
 #define LAST_STAGE (2)
 
-goal_in_game_state_t game_state;
+goal_in_game_state_t g_game_state;
 
-stage_info_t g_stage_info[3] = {
+static goal_in_stage_info_t g_stage_info[3] = {
     {7, 1, 3, 1000 * 60},
     {6, 2, 4, 1000 * 50},
     {5, 3, 5, 1000 * 40}
@@ -18,15 +18,15 @@ stage_info_t g_stage_info[3] = {
 
 static int g_goal_count;
 static int g_stage_level;
-static int g_is_goal = 0;
+static int g_is_goal;
 
-clock_t g_old_time;
-clock_t g_goal_ceremony_time;
+static clock_t g_old_time;
+static clock_t g_ceremony_time;
 
-player_t g_player;
+static player_t g_player;
 char g_str_player[] = "( > 企 < )";
-ball_t g_ball;
-goal_post_t g_goal_post;
+static ball_t g_ball;
+static goal_post_t g_goal_post;
 
 static void init(void);
 static void ready(void);
@@ -37,7 +37,7 @@ static int result(void);
 
 void goal_in_game(void)
 {
-    game_state = INIT;
+    g_game_state = GOAL_IN_GAME_INIT;
     g_stage_level = 0;
 
     clock_t cur_time = clock();
@@ -56,49 +56,49 @@ void goal_in_game(void)
 
         ScreenClear();
 
-        switch (game_state)
+        switch (g_game_state)
         {
-        case INIT:
+        case GOAL_IN_GAME_INIT:
             init();
             break;
-        case READY:
+        case GOAL_IN_GAME_READY:
             if (cur_time - g_old_time < 3000) {
                 ready();
             }
             else {
-                game_state = RUNNING;
+                g_game_state = GOAL_IN_GAME_RUNNING;
                 g_old_time = clock();
                 g_ball.old_time = clock();
                 g_goal_post.old_time = clock();
             }
             break;
-        case RUNNING:
+        case GOAL_IN_GAME_RUNNING:
             if (cur_time - g_old_time < g_stage_info[g_stage_level].time_limit) {
                 running();
             }
             else {
                 if (g_goal_count == g_stage_info[g_stage_level].goal_count) {
-                    game_state = SUCCESS;
+                    g_game_state = GOAL_IN_GAME_SUCCESS;
                     g_old_time = clock();
                 }
                 else {
-                    game_state = FAILED;
+                    g_game_state = GOAL_IN_GAME_FAILED;
                 }
             }
             break;
-        case SUCCESS:
+        case GOAL_IN_GAME_SUCCESS:
             if (cur_time - g_old_time < 3000) {
                 success();
             }
             else {
-                game_state = INIT;
+                g_game_state = GOAL_IN_GAME_INIT;
                 g_stage_level += 1;
             }
             break;
-        case FAILED:
+        case GOAL_IN_GAME_FAILED:
             return_value = failed();
             if (return_value == 1) {
-                game_state = INIT;
+                g_game_state = GOAL_IN_GAME_INIT;
                 g_stage_level = 0;
                 continue;
             }
@@ -106,7 +106,7 @@ void goal_in_game(void)
                 goto over;
             }
             break;
-        case RESULT:
+        case GOAL_IN_GAME_RESULT:
             return_value = result();
             if (return_value == 0) {
                 goto over;
@@ -145,7 +145,7 @@ void init(void)
     g_goal_post.dir = g_stage_info[g_stage_level].goal_post_dir;
     g_goal_post.line_length = g_stage_info[g_stage_level].goal_post_line_length;
 
-    game_state = READY;
+    g_game_state = GOAL_IN_GAME_READY;
     g_old_time = clock();
 }
 
@@ -153,7 +153,7 @@ void ready(void)
 {
     char buffer[32];
 
-    print_goal_in_game_screen();
+    print_game_screen();
     sprintf_s(buffer, 32, "     STAGE: %d     ", g_stage_level + 1);
     ScreenPrint(12, 10, "==================");
     ScreenPrint(12, 11, buffer);
@@ -163,7 +163,7 @@ void ready(void)
 void running(void)
 {
     if (g_goal_count == g_stage_info[g_stage_level].goal_count) {
-        game_state = SUCCESS;
+        g_game_state = GOAL_IN_GAME_SUCCESS;
         g_old_time = clock();
         return;
     }
@@ -202,7 +202,7 @@ void running(void)
         if (running_cur_time - g_ball.old_time > g_ball.move_time) {
             if (g_ball.y <= g_goal_post.y && (g_ball.x > g_goal_post.x && g_ball.x < g_goal_post.x + g_goal_post.line_length * 2)) {
                 g_goal_count += 1;
-                g_goal_ceremony_time = running_cur_time;
+                g_ceremony_time = running_cur_time;
                 g_is_goal = 1;
                 g_ball.is_ready = 1;
                 g_ball.x = g_player.move_x;
@@ -238,7 +238,8 @@ void running(void)
         g_goal_post.old_time = running_cur_time;
     }
 
-    print_goal_in_game_screen();
+    print_game_screen();
+    ScreenPrint(1, 5, "收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收收");
 
     ScreenPrint(g_player.x, g_player.y, g_str_player);
 
@@ -264,8 +265,8 @@ void running(void)
     }
 
     if (g_is_goal) {
-        if (running_cur_time - g_goal_ceremony_time < 2000) {
-            print_goal_in();
+        if (running_cur_time - g_ceremony_time < 2000) {
+            print_ceremony();
         }
         else {
             g_is_goal = 0;
@@ -276,10 +277,10 @@ void running(void)
 void success(void)
 {
     if (g_stage_level == LAST_STAGE) {
-        game_state = RESULT;
+        g_game_state = GOAL_IN_GAME_RESULT;
     }
 
-    print_goal_in_game_screen();
+    print_game_screen();
 
     ScreenPrint(12, 10, "==================");
     ScreenPrint(12, 11, "    STAGE CLEAR  ");

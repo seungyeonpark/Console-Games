@@ -23,7 +23,7 @@ int main()
                 whack_a_mole_game();
                 break;
             default:
-                ScreenPrint(0, 25, "Hit the number!");
+                ScreenPrint(5, 23, "Hit the number!");
                 break;
             }
         }

@@ -4,7 +4,12 @@
 #include <time.h>
 
 typedef enum {
-	INIT, READY, RUNNING, SUCCESS, FAILED, RESULT
+	GOAL_IN_GAME_INIT,
+	GOAL_IN_GAME_READY,
+	GOAL_IN_GAME_RUNNING,
+	GOAL_IN_GAME_SUCCESS,
+	GOAL_IN_GAME_FAILED,
+	GOAL_IN_GAME_RESULT
 } goal_in_game_state_t;
 
 typedef struct {
@@ -12,7 +17,7 @@ typedef struct {
 	int goal_post_dir;
 	int goal_count;
 	clock_t time_limit;
-} stage_info_t;
+} goal_in_stage_info_t;
 
 typedef struct {
 	int x;

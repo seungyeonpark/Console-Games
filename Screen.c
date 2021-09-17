@@ -23,7 +23,7 @@ void print_main_screen(void)
     ScreenPrint(5, 20, "¦­                                                               ¦­");
     ScreenPrint(5, 21, "¦Å¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦Ä");
 }
-               
+
 void print_goal_in_game_intro(void)
 {
     ScreenPrint(5, 2, "                _____  _   _  _____ ______  _____ ");
@@ -46,13 +46,13 @@ void print_goal_in_game_intro(void)
     ScreenPrint(5, 22, "¦Å¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦Ä");
 }
 
-void print_goal_in_game_screen(void)
+void print_game_screen(void)
 {
     ScreenPrint(0, 1, "¦È¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦Â");
     ScreenPrint(0, 2, "¦­                                      ¦­");
     ScreenPrint(0, 3, "¦­                                      ¦­");
     ScreenPrint(0, 4, "¦­                                      ¦­");
-    ScreenPrint(0, 5, "¦­¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦­");
+    ScreenPrint(0, 5, "¦­                                      ¦­");
     ScreenPrint(0, 6, "¦­                                      ¦­");
     ScreenPrint(0, 7, "¦­                                      ¦­");
     ScreenPrint(0, 8, "¦­                                      ¦­");
@@ -72,9 +72,9 @@ void print_goal_in_game_screen(void)
     ScreenPrint(0, 22, "¦Æ¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦¬¦Ä");
 }
 
-void print_goal_in(void)
+void print_ceremony(void)
 {
-    ScreenPrint(45, 12, " ¡ÚGOAL IN¡Ú");
+    ScreenPrint(45, 12, " ¡ÚPERFECT¡Ú");
     ScreenPrint(45, 13, " ¡¡ ¡ü..¡ü");
     ScreenPrint(45, 14, "¡û(£Þ 0 £Þ)¡û");
     ScreenPrint(45, 15, "   \\¡¡¡¡«Î");
