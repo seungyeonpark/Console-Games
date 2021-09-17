@@ -68,7 +68,7 @@ void whack_a_mole_game(void)
 			//
 			break;
 		case WHACK_A_MOLE_RUNNING:
-			//
+			running();
 			break;
 		case WHACK_A_MOLE_SUCCESS:
 			//
@@ -97,7 +97,104 @@ void ready(void)
 
 void running(void)
 {
+	char buffer[52];
+	clock_t running_cur_time = clock();
 
+	for (int i = 0; i < MOLES_NUM; ++i) {
+		switch (moles[i].mole_state)
+		{
+		case SETUP:
+			moles[i].mole_state = UP;
+			moles[i].old_time = running_cur_time;
+			moles[i].output_time = rand() % 2000 + 50;
+			break;
+		case UP:
+			if (running_cur_time - moles[i].old_time > moles[i].output_time) {
+				moles[i].old_time = running_cur_time;
+				moles[i].mole_state = DOWN;
+			}
+			break;
+		case DOWN:
+			if (running_cur_time - moles[i].old_time > 3000) {
+				moles[i].old_time = running_cur_time;
+				moles[i].mole_state = SETUP;
+			}
+			break;
+		default:
+			assert(0);
+			break;
+		}
+	}
+
+	if (_kbhit()) {
+		if (hammer.active == 0) {
+			int key = _getch();
+			key = key - '0' - 1;
+
+			if (0 <= key && key <= 9) {
+				hammer.active = 1;
+				hammer.position = g_position[key];
+				hammer.old_time = running_cur_time;
+
+				if (moles[key].mole_state == UP) {
+					moles[key].mole_state = DOWN;
+					g_caught_moles_num += 1;
+					g_is_caught = 1;
+					g_ceremony_time = running_cur_time;
+				}
+			}
+		}
+	}
+
+	print_game_screen();
+
+	sprintf_s(buffer, 52, "STAGE: %d  TIME : %d / %d", g_stage_level + 1, (running_cur_time - g_old_time) / 1000, g_stage_info[g_stage_level].time_limit / 1000);
+	ScreenPrint(45, 6, buffer);
+
+	ScreenPrint(45, 7, "MOLES: ");
+	int remaining_moles = g_stage_info[g_stage_level].moles_num - g_caught_moles_num;
+	for (int i = 0; i < g_caught_moles_num; ++i) {
+		ScreenPrint(52 + i * 2, 7, "¡Ü");
+	}
+	for (int j = 0; j < remaining_moles; ++j) {
+		ScreenPrint(52 + (g_caught_moles_num + j) * 2, 7, "¡Û");
+	}
+
+	if (g_is_caught) {
+		if (running_cur_time - g_ceremony_time < 1000) {
+			print_ceremony();
+		}
+		else {
+			g_is_caught = 0;
+		}
+	}
+
+	for (int i = 0; i < MOLES_NUM; ++i) {
+		ScreenPrint(g_position[i].x, g_position[i].y, "¢Í");
+		if (moles[i].mole_state == UP) {
+			ScreenPrint(g_position[i].x, g_position[i].y - 1, "¡Ü");
+		}
+	}
+
+	if (hammer.active == 0) {
+		ScreenPrint(31, 8, "  ¡û");
+		ScreenPrint(31, 9, "¡á¡á¡á");
+		ScreenPrint(31, 10, "¡á¡á¡á");
+		ScreenPrint(31, 11, "  //");
+		ScreenPrint(31, 12, "  //");
+		ScreenPrint(31, 13, "  ¡û");
+		ScreenPrint(31, 14, "  ¡ú");
+	}
+	else {
+		if (running_cur_time - hammer.old_time < 200) {
+			ScreenPrint(hammer.position.x, hammer.position.y - 3, "¡Ù ¡á¡á");
+			ScreenPrint(hammer.position.x, hammer.position.y - 2, "¡ø ¡á¡á == ¡ø¡ù");
+			ScreenPrint(hammer.position.x, hammer.position.y - 1, "¡Ù ¡á¡á");
+		}
+		else {
+			hammer.active = 0;
+		}
+	}
 }
 
 void success(void)
