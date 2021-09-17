@@ -3,6 +3,7 @@
 #include "Console.h"
 #include "GoalInGame.h"
 #include "Screen.h"
+#include "WhackAMole.h"
 
 int main()
 {
