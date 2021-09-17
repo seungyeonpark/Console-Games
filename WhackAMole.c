@@ -37,8 +37,8 @@ static void init(void);
 static void ready(void);
 static void running(void);
 static void success(void);
-static void failed(void);
-static void result(void);
+static int failed(void);
+static int result(void);
 
 void whack_a_mole_game(void)
 {
@@ -56,49 +56,106 @@ void whack_a_mole_game(void)
 	}
 
 	while (1) {
+		int return_value;
 		cur_time = clock();
 
 		ScreenClear();
 
 		switch (g_game_state) {
 		case WHACK_A_MOLE_INIT:
-			//
+			init();
 			break;
 		case WHACK_A_MOLE_READY:
-			//
+			if (cur_time - g_old_time < 3000) {
+				ready();
+			}
+			else {
+				g_game_state = WHACK_A_MOLE_RUNNING;
+				g_old_time = cur_time;
+			}
 			break;
 		case WHACK_A_MOLE_RUNNING:
-			running();
+			if (cur_time - g_old_time < g_stage_info[g_stage_level].time_limit) {
+				running();
+			}
+			else {
+				if (g_caught_moles_num == g_stage_info[g_stage_level].moles_num) {
+					g_game_state = WHACK_A_MOLE_SUCCESS;
+					g_old_time = clock();
+				}
+				else {
+					g_game_state = WHACK_A_MOLE_FAILED;
+				}
+			}
 			break;
 		case WHACK_A_MOLE_SUCCESS:
-			//
+			if (cur_time - g_old_time < 3000) {
+				success();
+			}
+			else {
+				g_game_state = WHACK_A_MOLE_INIT;
+				g_stage_level += 1;
+			}
 			break;
 		case WHACK_A_MOLE_FAILED:
-			//
+			return_value = failed();
+			if (return_value == 1) {
+				g_game_state = WHACK_A_MOLE_INIT;
+				g_stage_level = 0;
+				continue;
+			}
+			else if (return_value == 0) {
+				goto over;
+			}
 			break;
 		case WHACK_A_MOLE_RESULT:
-			//
+			return_value = result();
+			if (return_value == 0) {
+				goto over;
+			}
 			break;
 		}
 
 		ScreenFlipping();
 	}
+over:
+	return;
 }
 
 void init(void)
 {
+	for (int i = 0; i < MOLES_NUM; ++i) {
+		moles[i].mole_state = SETUP;
+	}
+	g_caught_moles_num = 0;
+	hammer.active = 0;
+	g_is_caught = 0;
 
+	g_old_time = clock();
+	g_game_state = WHACK_A_MOLE_READY;
 }
 
 void ready(void)
 {
+	char buffer[32];
 
+	print_game_screen();
+	sprintf_s(buffer, 32, "     STAGE: %d     ", g_stage_level + 1);
+	ScreenPrint(12, 10, "==================");
+	ScreenPrint(12, 11, buffer);
+	ScreenPrint(12, 12, "==================");
 }
 
 void running(void)
 {
 	char buffer[52];
 	clock_t running_cur_time = clock();
+
+	if (g_caught_moles_num == g_stage_info[g_stage_level].moles_num) {
+		g_game_state = WHACK_A_MOLE_SUCCESS;
+		g_old_time = clock();
+		return;
+	}
 
 	for (int i = 0; i < MOLES_NUM; ++i) {
 		switch (moles[i].mole_state)
@@ -199,15 +256,44 @@ void running(void)
 
 void success(void)
 {
+	if (g_stage_level == LAST_STAGE) {
+		g_game_state = WHACK_A_MOLE_RESULT;
+	}
 
+	print_game_screen();
+
+	ScreenPrint(12, 10, "==================");
+	ScreenPrint(12, 11, "    STAGE CLEAR  ");
+	ScreenPrint(12, 12, "==================");
 }
 
-void failed(void)
+int failed(void)
 {
+	print_failed();
 
+	if (_kbhit()) {
+		int key = _getch();
+
+		switch (key) {
+		case 'y':
+			// intentional fall through
+		case 'Y':
+			return 1;
+		default:
+			return 0;
+		}
+	}
+	return -1;
 }
 
-void result(void)
+int result(void)
 {
+	print_result();
 
+	if (_kbhit()) {
+		int buffer = _getch();
+		return 0;
+	}
+
+	return -1;
 }
