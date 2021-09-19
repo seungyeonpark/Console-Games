@@ -11,7 +11,9 @@
 #define CHANGE_SCREEN_TIME (3000)
 #define EFFECT_TIME (1000)
 
-whack_a_mole_state_t s_game_state;
+typedef enum { INIT, READY, RUNNING, SUCCESS, FAILED, RESULT } state_t;
+
+state_t g_state;
 
 static whack_a_mole_stage_info_t s_stage_info[3] = {
 	{5, 1000 * 60},
@@ -25,15 +27,15 @@ static position_t s_position[MOLES_NUM] = {
 	{7, 6}, {15, 6}, {23, 6}
 };
 
-static clock_t s_old_time;
-static clock_t s_ceremony_time;
-
 static mole_t moles[MOLES_NUM];
 static hammer_t hammer;
 
 static int s_stage_level;
 static int s_is_caught;
 static int s_caught_moles_num;
+
+static clock_t s_old_time;
+static clock_t s_ceremony_time;
 
 static void init(void);
 static void ready(void);
@@ -44,7 +46,7 @@ static int result(void);
 
 void whack_a_mole_game(void)
 {
-	s_game_state = WHACK_A_MOLE_INIT;
+	g_state = INIT;
 	s_stage_level = 0;
 
 	clock_t cur_time = clock();
@@ -63,53 +65,53 @@ void whack_a_mole_game(void)
 
 		ScreenClear();
 
-		switch (s_game_state) {
-		case WHACK_A_MOLE_INIT:
+		switch (g_state) {
+		case INIT:
 			init();
 			break;
-		case WHACK_A_MOLE_READY:
+		case READY:
 			if (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
 				ready();
 			}
 			else {
-				s_game_state = WHACK_A_MOLE_RUNNING;
+				g_state = RUNNING;
 				s_old_time = cur_time;
 			}
 			break;
-		case WHACK_A_MOLE_RUNNING:
+		case RUNNING:
 			if (cur_time - s_old_time < s_stage_info[s_stage_level].time_limit) {
 				running();
 			}
 			else {
 				if (s_caught_moles_num == s_stage_info[s_stage_level].moles_num) {
-					s_game_state = WHACK_A_MOLE_SUCCESS;
+					g_state = SUCCESS;
 					s_old_time = clock();
 				}
 				else {
-					s_game_state = WHACK_A_MOLE_FAILED;
+					g_state = FAILED;
 				}
 			}
 			break;
-		case WHACK_A_MOLE_SUCCESS:
+		case SUCCESS:
 			if (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
 				success();
 			}
 			else {
-				s_game_state = WHACK_A_MOLE_INIT;
+				g_state = INIT;
 				s_stage_level += 1;
 			}
 			break;
-		case WHACK_A_MOLE_FAILED:
+		case FAILED:
 			return_value = failed();
 			if (return_value == 1) {
-				s_game_state = WHACK_A_MOLE_INIT;
+				g_state = INIT;
 				s_stage_level = 0;
 			}
 			else if (return_value == 0) {
 				goto over;
 			}
 			break;
-		case WHACK_A_MOLE_RESULT:
+		case RESULT:
 			return_value = result();
 			if (return_value == 0) {
 				goto over;
@@ -133,7 +135,7 @@ void init(void)
 	s_is_caught = 0;
 
 	s_old_time = clock();
-	s_game_state = WHACK_A_MOLE_READY;
+	g_state = READY;
 }
 
 void ready(void)
@@ -153,7 +155,7 @@ void running(void)
 	clock_t running_cur_time = clock();
 
 	if (s_caught_moles_num == s_stage_info[s_stage_level].moles_num) {
-		s_game_state = WHACK_A_MOLE_SUCCESS;
+		g_state = SUCCESS;
 		s_old_time = clock();
 		return;
 	}
@@ -258,7 +260,7 @@ void running(void)
 void success(void)
 {
 	if (s_stage_level == LAST_STAGE) {
-		s_game_state = WHACK_A_MOLE_RESULT;
+		g_state = RESULT;
 	}
 
 	print_game_screen();

@@ -3,15 +3,6 @@
 
 #include <time.h>
 
-typedef enum {
-	WHACK_A_MOLE_INIT,
-	WHACK_A_MOLE_READY,
-	WHACK_A_MOLE_RUNNING,
-	WHACK_A_MOLE_SUCCESS,
-	WHACK_A_MOLE_FAILED,
-	WHACK_A_MOLE_RESULT
-} whack_a_mole_state_t;
-
 typedef struct {
 	int moles_num;
 	clock_t time_limit;

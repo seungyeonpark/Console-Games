@@ -3,15 +3,6 @@
 
 #include <time.h>
 
-typedef enum {
-	GOAL_IN_GAME_INIT,
-	GOAL_IN_GAME_READY,
-	GOAL_IN_GAME_RUNNING,
-	GOAL_IN_GAME_SUCCESS,
-	GOAL_IN_GAME_FAILED,
-	GOAL_IN_GAME_RESULT
-} goal_in_game_state_t;
-
 typedef struct {
 	int goal_post_line_length;
 	int goal_post_dir;
