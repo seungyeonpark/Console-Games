@@ -68,6 +68,28 @@ void print_whack_a_mole_intro(void)
     ScreenPrint(5, 22, "┖━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙");
 }
 
+void print_airplane_game_intro(void)
+{
+    ScreenPrint(5, 2, "                _____  _   _  _____ ______  _____ ");
+    ScreenPrint(5, 3, "               |_   _|| \\ | ||_   _|| ___ \\|  _  |");
+    ScreenPrint(5, 4, "                 | |  |  \\| |  | |  | |_/ /| | | |");
+    ScreenPrint(5, 5, "                 | |  | . ` |  | |  |    / | | | |");
+    ScreenPrint(5, 6, "                _| |_ | |\\  |  | |  | |\\ \\ \\ \\_/ /");
+    ScreenPrint(5, 7, "                \\___/ \\_| \\_/  \\_/  \\_| \\_| \\___/");
+    ScreenPrint(5, 11, "┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑");
+    ScreenPrint(5, 12, "┃                                                               ┃");
+    ScreenPrint(5, 13, "┃                  ====▶ AIRPLANE GAME ◀====                  ┃");
+    ScreenPrint(5, 14, "┃                                                               ┃");
+    ScreenPrint(5, 15, "┃                   스테이지 1-3까지 있습니다                   ┃");
+    ScreenPrint(5, 16, "┃                                                               ┃");
+    ScreenPrint(5, 17, "┃      날아오는 별들에 부딪히지 않게 비행기를 운전하세요!       ┃");
+    ScreenPrint(5, 18, "┃                                                               ┃");
+    ScreenPrint(5, 19, "┃            left : ← right : → up : ↑ down : ↓             ┃");
+    ScreenPrint(5, 20, "┃                                                               ┃");
+    ScreenPrint(5, 21, "┃                                                               ┃");
+    ScreenPrint(5, 22, "┖━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙");
+}
+
 void print_game_screen(void)
 {
     ScreenPrint(0, 1, "┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑");
