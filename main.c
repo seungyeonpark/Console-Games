@@ -23,6 +23,9 @@ int main()
             case '2':
                 whack_a_mole_game();
                 break;
+            case '3':
+                airplane_game();
+                break;
             default:
                 ScreenPrint(5, 23, "Hit the number!");
                 break;

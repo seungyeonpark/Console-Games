@@ -44,11 +44,105 @@ static int result(void);
 
 void airplane_game(void)
 {
-    while (1) {
+    g_state = INIT;
+    s_stage_level = 0;
+
+    clock_t cur_time = clock();
+    s_old_time = cur_time;
+
+    while (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
         ScreenClear();
-        running();
+        print_airplane_game_intro();
+        cur_time = clock();
         ScreenFlipping();
     }
+
+    while (1) {
+        int return_value;
+        cur_time = clock();
+
+        ScreenClear();
+
+        switch (g_state) {
+        case INIT:
+            init();
+            break;
+        case READY:
+            if (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
+                ready();
+            }
+            else {
+                g_state = RUNNING;
+                s_old_time = cur_time;
+            }
+            break;
+        case RUNNING:
+            if (cur_time - s_old_time < s_stage_info[s_stage_level].time_limit) {
+                running(cur_time);
+            }
+            else {
+                g_state = SUCCESS;
+                s_old_time = clock();
+            }
+            break;
+        case SUCCESS:
+            if (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
+                success();
+            }
+            else {
+                g_state = INIT;
+                s_stage_level += 1;
+            }
+            break;
+        case FAILED:
+            return_value = failed();
+            if (return_value == 1) {
+                g_state = INIT;
+                s_stage_level = 0;
+            }
+            else if (return_value == 0) {
+                goto over;
+            }
+            break;
+        case RESULT:
+            return_value = result();
+            if (return_value == 0) {
+                goto over;
+            }
+            break;
+        default:
+            assert(0);
+            break;
+        }
+
+        ScreenFlipping();
+    }
+over:
+    return;
+}
+
+void init(void)
+{
+    airplane.x = 20;
+    airplane.y = 10;
+
+    for (int i = 0; i < s_stage_info[s_stage_level].stars_num; ++i) {
+        stars[i].state = SET;
+    }
+
+    s_old_time = clock();
+    g_state = READY;
+}
+
+void ready(void)
+{
+    char buffer[32];
+
+    print_game_screen();
+    sprintf_s(buffer, 32, "     STAGE: %d     ", s_stage_level + 1);
+    ScreenPrint(12, 10, "==================");
+    ScreenPrint(12, 11, buffer);
+    ScreenPrint(12, 12, "==================");
 }
 
 void running(clock_t running_time)
@@ -169,4 +263,48 @@ void move_star(star_t* star)
             g_state = FAILED;
         }
     }
+}
+
+void success(void)
+{
+    if (s_stage_level == LAST_STAGE) {
+        g_state = RESULT;
+    }
+
+    print_game_screen();
+
+    ScreenPrint(12, 10, "==================");
+    ScreenPrint(12, 11, "    STAGE CLEAR  ");
+    ScreenPrint(12, 12, "==================");
+}
+
+int failed(void)
+{
+    print_failed();
+
+    if (_kbhit()) {
+        int key = _getch();
+
+        switch (key) {
+        case 'y':
+            // intentional fall through
+        case 'Y':
+            return 1;
+        default:
+            return 0;
+        }
+    }
+    return -1;
+}
+
+int result(void)
+{
+    print_result();
+
+    if (_kbhit()) {
+        int buffer = _getch();
+        return 0;
+    }
+
+    return -1;
 }
