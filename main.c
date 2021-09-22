@@ -4,6 +4,7 @@
 #include "GoalInGame.h"
 #include "Screen.h"
 #include "WhackAMole.h"
+#include "CardGame.h"
 
 int main()
 {
@@ -26,6 +27,8 @@ int main()
             case '3':
                 airplane_game();
                 break;
+            case '4':
+                card_game();
             default:
                 ScreenPrint(5, 23, "Hit the number!");
                 break;
