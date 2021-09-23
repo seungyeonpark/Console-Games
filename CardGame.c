@@ -23,7 +23,6 @@ static card_game_stage_info_t s_stage_info[3] = {
 };
 
 static card_t cards[30];
-static card_t* open_cards[2];
 static card_value_data_t values[26];
 static match_info_t match_info;
 

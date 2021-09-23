@@ -253,13 +253,13 @@ void running(void)
         ScreenPrint(s_goal_post.x + i * 2, s_goal_post.y, "¢Ì");
     }
 
-    sprintf_s(buffer, 32, "stage: %d", s_stage_level + 1);
+    sprintf_s(buffer, 32, "STAGE: %d", s_stage_level + 1);
     ScreenPrint(45, 6, buffer);
-    sprintf_s(buffer, 32, "time: %d / %d", (running_cur_time - s_old_time) / 1000, s_stage_info[s_stage_level].time_limit / 1000);
+    sprintf_s(buffer, 32, "TIME: %d / %d", (running_cur_time - s_old_time) / 1000, s_stage_info[s_stage_level].time_limit / 1000);
     ScreenPrint(45, 7, buffer);
 
     int not_goal = s_stage_info[s_stage_level].goal_count - s_goal_count;
-    ScreenPrint(45, 8, "goal: ");
+    ScreenPrint(45, 8, "GOAL: ");
     for (int i = 0; i < s_goal_count; ++i) {
         ScreenPrint(50 + i * 2, 8, "¡Ü");
     }
