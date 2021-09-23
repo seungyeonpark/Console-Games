@@ -90,6 +90,28 @@ void print_airplane_game_intro(void)
     ScreenPrint(5, 22, "┖━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙");
 }
 
+void print_card_game_intro(void)
+{
+    ScreenPrint(5, 2, "                _____  _   _  _____ ______  _____ ");
+    ScreenPrint(5, 3, "               |_   _|| \\ | ||_   _|| ___ \\|  _  |");
+    ScreenPrint(5, 4, "                 | |  |  \\| |  | |  | |_/ /| | | |");
+    ScreenPrint(5, 5, "                 | |  | . ` |  | |  |    / | | | |");
+    ScreenPrint(5, 6, "                _| |_ | |\\  |  | |  | |\\ \\ \\ \\_/ /");
+    ScreenPrint(5, 7, "                \\___/ \\_| \\_/  \\_/  \\_| \\_| \\___/");
+    ScreenPrint(5, 11, "┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑");
+    ScreenPrint(5, 12, "┃                                                               ┃");
+    ScreenPrint(5, 13, "┃                  ====▶ AIRPLANE GAME ◀====                  ┃");
+    ScreenPrint(5, 14, "┃                                                               ┃");
+    ScreenPrint(5, 15, "┃                   스테이지 1-3까지 있습니다                   ┃");
+    ScreenPrint(5, 16, "┃                                                               ┃");
+    ScreenPrint(5, 17, "┃           제한 시간 내에 모든 카드의 짝을 맞추세요!           ┃");
+    ScreenPrint(5, 18, "┃                                                               ┃");
+    ScreenPrint(5, 19, "┃          left : j  / right : l /  up : i /  down : k          ┃");
+    ScreenPrint(5, 20, "┃                        카드 뒤집기 : s                        ┃");
+    ScreenPrint(5, 21, "┃                                                               ┃");
+    ScreenPrint(5, 22, "┖━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙");
+}
+
 void print_game_screen(void)
 {
     ScreenPrint(0, 1, "┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑");

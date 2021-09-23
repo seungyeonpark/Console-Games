@@ -44,4 +44,11 @@ void card_game(void)
 
 	clock_t cur_time = clock();
 	s_old_time = cur_time;
+
+	while (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
+		ScreenClear();
+		print_card_game_intro();
+		cur_time = clock();
+		ScreenFlipping();
+	}
 }
