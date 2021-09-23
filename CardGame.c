@@ -37,9 +37,14 @@ static clock_t s_old_time;
 static clock_t s_play_time;
 static clock_t s_ceremony_time;
 
+static void init(void);
+static void ready(void);
 static void running(void);
 static void print_open_card(int x, int y, char value);
 static void print_close_card(int x, int y);
+static void success(void);
+static int failed(void);
+static int result(void);
 
 void card_game(void)
 {
@@ -65,6 +70,77 @@ void card_game(void)
 		values[i].value = 'A' + i;
 	}
 
+	while (1) {
+		int return_value;
+		cur_time = clock();
+
+		ScreenClear();
+
+		switch (g_state) {
+		case INIT:
+			init();
+			break;
+		case READY:
+			if (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
+				ready();
+			}
+			else {
+				g_state = RUNNING;
+				s_old_time = cur_time;
+			}
+			break;
+		case RUNNING:
+			if (cur_time - s_old_time < s_stage_info[s_stage_level].time_limit) {
+				running();
+			}
+			else {
+				if (s_score == s_stage_info[s_stage_level].cards_num / 2) {
+					g_state = SUCCESS;
+					s_old_time = clock();
+				}
+				else {
+					g_state = FAILED;
+				}
+			}
+			break;
+		case SUCCESS:
+			if (cur_time - s_old_time < CHANGE_SCREEN_TIME) {
+				success();
+			}
+			else {
+				g_state = INIT;
+				s_stage_level += 1;
+			}
+			break;
+		case FAILED:
+			return_value = failed();
+			if (return_value == 1) {
+				g_state = INIT;
+				s_stage_level = 0;
+			}
+			else if (return_value == 0) {
+				goto over;
+			}
+			break;
+		case RESULT:
+			return_value = result();
+			if (return_value == 0) {
+				goto over;
+			}
+			break;
+		default:
+			assert(0);
+			break;
+		}
+
+		ScreenFlipping();
+	}
+over:
+	return;
+}
+
+void init(void)
+{
 	s_score = 0;
 	s_row_num = 0;
 	s_col_num = 0;
@@ -105,11 +181,19 @@ void card_game(void)
 		}
 	}
 
-	while (1) {
-		ScreenClear();
-		running();
-		ScreenFlipping();
-	}
+	s_old_time = clock();
+	g_state = READY;
+}
+
+void ready(void)
+{
+	char buffer[32];
+
+	print_game_screen();
+	sprintf_s(buffer, 32, "     STAGE: %d     ", s_stage_level + 1);
+	ScreenPrint(12, 10, "==================");
+	ScreenPrint(12, 11, buffer);
+	ScreenPrint(12, 12, "==================");
 }
 
 void running(void)
@@ -241,4 +325,48 @@ void print_close_card(int x, int y)
 	ScreenPrint(x, y, "牟收收汕");
 	ScreenPrint(x, y + 1, "弛  弛");
 	ScreenPrint(x, y + 2, "汎收收汛");
+}
+
+void success(void)
+{
+	if (s_stage_level == LAST_STAGE) {
+		g_state = RESULT;
+	}
+
+	print_game_screen();
+
+	ScreenPrint(12, 10, "==================");
+	ScreenPrint(12, 11, "    STAGE CLEAR  ");
+	ScreenPrint(12, 12, "==================");
+}
+
+int failed(void)
+{
+	print_failed();
+
+	if (_kbhit()) {
+		int key = _getch();
+
+		switch (key) {
+		case 'y':
+			// intentional fall through
+		case 'Y':
+			return 1;
+		default:
+			return 0;
+		}
+	}
+	return -1;
+}
+
+int result(void)
+{
+	print_result();
+
+	if (_kbhit()) {
+		int buffer = _getch();
+		return 0;
+	}
+
+	return -1;
 }
