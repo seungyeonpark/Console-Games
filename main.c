@@ -1,10 +1,11 @@
 #include <conio.h>
 #include <stdio.h>
 #include "Console.h"
-#include "GoalInGame.h"
 #include "Screen.h"
+#include "GoalInGame.h"
 #include "WhackAMole.h"
 #include "CardGame.h"
+#include "AirplaneGame.h"
 
 int main()
 {
@@ -19,16 +20,17 @@ int main()
 
             switch (key) {
             case '1':
-                goal_in_game();
-                break;
-            case '2':
-                whack_a_mole_game();
-                break;
-            case '3':
                 airplane_game();
                 break;
-            case '4':
+            case '2':
                 card_game();
+                break;
+            case '3':
+                goal_in_game();
+                break;
+            case '4':
+                whack_a_mole_game();
+                break;
             default:
                 ScreenPrint(5, 23, "Hit the number!");
                 break;

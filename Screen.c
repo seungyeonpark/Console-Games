@@ -15,9 +15,9 @@ void print_main_screen(void)
     ScreenPrint(5, 12, "┃                                                               ┃");
     ScreenPrint(5, 13, "┃                                                               ┃");
     ScreenPrint(5, 14, "┃                                                               ┃");
-    ScreenPrint(5, 15, "┃  ① 슛 골인 게임  ② 두더지 잡기  ③ 짝 맞추기  ④ 하트 게임  ┃");
+    ScreenPrint(5, 15, "┃          ① 별 피하기              ② 짝 맞추기               ┃");
     ScreenPrint(5, 16, "┃                                                               ┃");
-    ScreenPrint(5, 17, "┃           ⑤ Snake 게임  ⑥ Sogo 게임  ⑦ 탱크 게임           ┃");
+    ScreenPrint(5, 17, "┃         ③ 슛 골인 게임           ④ 두더지 잡기              ┃");
     ScreenPrint(5, 18, "┃                                                               ┃");
     ScreenPrint(5, 19, "┃                                                               ┃");
     ScreenPrint(5, 20, "┃                                                               ┃");
